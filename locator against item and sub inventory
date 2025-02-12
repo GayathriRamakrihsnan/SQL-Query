@@ -1,0 +1,38 @@
+------------------------------------------------------------------
+SELECT distinct  decode (a.ORGANIZATION_ID,87,'TMD-U1') "ORG NAME",
+        a.segment1 as "Item",
+        a.DESCRIPTION "Description",
+        b.SECONDARY_INVENTORY "Sub Inventory",
+        (select a2.SEGMENT1||'.'||a2.SEGMENT2||'.'||a2.SEGMENT3 
+        from 
+            apps.MTL_SECONDARY_LOCATORS a1,
+            apps.mtl_item_locations a2 
+        where 
+            a1.SECONDARY_LOCATOR = a2.INVENTORY_LOCATION_ID
+        and a1.SUBINVENTORY_CODE='RND-LAB'
+        and a1.ORGANIZATION_ID=87
+        and a1.INVENTORY_ITEM_ID=a.INVENTORY_ITEM_ID
+        ) as "LOCATOR"
+        
+FROM
+    APPS.MTL_SYSTEM_ITEMS_B a,
+    apps.MTL_ITEM_SUB_INVENTORIES b
+where
+    a.INVENTORY_ITEM_ID = b.INVENTORY_ITEM_ID
+and a.ORGANIZATION_ID = b.ORGANIZATION_ID
+--and a.SEGMENT1='5G0310634'
+and a.ORGANIZATION_ID =87
+and b.SECONDARY_INVENTORY='RND-LAB'
+;
+----------------------------------------------------------------------------------------------------------------
+select a2.SEGMENT1||'.'||a2.SEGMENT2||'.'||a2.SEGMENT3||'.' LOCATOR
+from 
+    apps.MTL_SECONDARY_LOCATORS a1,
+    apps.mtl_item_locations a2 
+where 
+    a1.SECONDARY_LOCATOR = a2.INVENTORY_LOCATION_ID
+and a1.SUBINVENTORY_CODE='RND-LAB'
+and a1.ORGANIZATION_ID=87
+and a1.INVENTORY_ITEM_ID=10372336
+;
+    
