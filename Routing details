@@ -1,0 +1,62 @@
+Request you to provide the Routing details for the 5 Stroke and D Numbers for the period Apr2023 Mar 2024
+
+
+1. Initial Creation
+2. Any Modification in Master routing
+3. Alternate routing creation
+
+Request Date
+Item No
+Item Description
+04-Apr-23
+5L810101600
+BED MACHINING (300mm T/S GUIDEWAY EXTN)-LL30T L10 AND TWO SET OF STEADY REST
+22-Apr-23
+D55V613602100
+TABLE-800(M)-OPN 85 MACHINING AT FMC
+=================================================================================================
+SELECT 
+    BOR.ORGANIZATION_ID,
+    msi.segment1 routing_name,
+    msi.description routing_desc,
+    BOR.ALTERNATE_ROUTING_DESIGNATOR,
+    bos.operation_seq_num, 
+    bos.operation_description, 
+    bd.department_code, 
+    bd.description dep_desc,
+    bos.effectivity_date,
+    bos.disable_date  ,
+    bso.operation_code,
+    bos.attribute6 ECO_NUMBER 
+FROM
+ 
+    apps.bom_operational_routings bor,
+
+    apps.mtl_system_items_b       msi,
+ 
+    apps.bom_operation_sequences  bos,
+ 
+    apps.bom_departments          bd,
+ 
+    apps.bom_standard_operations bso
+ 
+WHERE
+ 
+     trunc(BOR.creation_date) between  '01-Apr-2023' and '31-MAR-2024'
+ and
+     bor.assembly_item_id = msi.inventory_item_id
+     
+    AND bor.organization_id = msi.organization_id
+    
+    and bso.Standard_Operation_Id(+) =bos.standard_operation_id
+ 
+   and (msi.segment1 LIKE '5%' OR  msi.segment1 LIKE 'D%')
+   -- and msi.segment1 in ('5L810101600','D55V613602100')
+ 
+    AND bor.routing_sequence_id = bos.routing_sequence_id
+ 
+    AND bos.department_id = bd.department_id
+ --   and  msi.organization_id = 93
+--    AND msi.bom_item_type = 2
+   and bor.ORGANIZATION_ID = msi.ORGANIZATION_ID
+;
